@@ -385,20 +385,18 @@ func RegisterProxyDialers() {
 // It creates a proxy dialer and returns the Dialer
 func CreateProxyDialer(proxystring string) (proxy.Dialer, error) {
 	proxystr := strings.Split(proxystring, ":")
-	var proxystringsec string
-	println(len(proxystr))
+	var proxystringsec url.URL
 	if len(proxystr) == 3 {
-		proxystringsec = proxystr[0] + "://" + strings.ReplaceAll(proxystr[1], "/", "") + ":" + proxystr[2]
+		proxystringsec = url.URL{Scheme: proxystr[0],
+			Host: strings.ReplaceAll(proxystr[1], "/", "") + ":" + proxystr[2]}
 	} else if len(proxystr) == 5 {
-		proxystringsec = proxystr[0] + "://" + proxystr[3] + ":" + proxystr[4] + "@" + strings.ReplaceAll(proxystr[1], "/", "") + ":" + proxystr[2]
+		proxystringsec = url.URL{Scheme: proxystr[0],
+			User: url.UserPassword(proxystr[3], proxystr[4]), Host: strings.ReplaceAll(proxystr[1], "/", "") + ":" + proxystr[2]}
 	} else {
-		proxystringsec = "proxyless://127.0.0.1:8080"
+		proxystringsec = url.URL{Scheme: "proxyless",
+		Host: "127.0.0.1" + ":" + "8080"}
 	}
-	proxyurl, err := url.Parse(proxystringsec)
-	if err != nil {
-		return nil, err
-	}
-	dialer, err := proxy.FromURL(proxyurl, proxy.Direct)
+	dialer, err := proxy.FromURL(&proxystringsec, proxy.Direct)
 	if err != nil {
 		return nil, err
 	}
