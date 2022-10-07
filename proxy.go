@@ -387,10 +387,10 @@ func CreateProxyDialer(proxystring string) (proxy.Dialer, error) {
 	proxystr := strings.Split(proxystring, ":")
 	var proxystringsec url.URL
 	if len(proxystr) == 3 {
-		proxystringsec = url.URL{Scheme: proxystr[0],
+		proxystringsec = url.URL{Scheme: strings.ToLower(proxystr[0]),
 			Host: strings.ReplaceAll(proxystr[1], "/", "") + ":" + proxystr[2]}
 	} else if len(proxystr) == 5 {
-		proxystringsec = url.URL{Scheme: proxystr[0],
+		proxystringsec = url.URL{Scheme: strings.ToLower(proxystr[0]),
 			User: url.UserPassword(proxystr[3], proxystr[4]), Host: strings.ReplaceAll(proxystr[1], "/", "") + ":" + proxystr[2]}
 	} else {
 		proxystringsec = url.URL{Scheme: "proxyless",
