@@ -20,9 +20,11 @@ package main
 
 import (
 	"github.com/kawacode/goproxy"
+	fhttp "github.com/kawacode/fhttp"
+	fhttp2 "github.com/kawacode/fhttp/http2"
 )
 func main() {
-	RegisterProxyDialers() // Register the types
+	goproxy.RegisterProxyDialers() // Register the types
 	proxy := "type://example.com:port:username:password"
 	client := &fhttp.Client{
 		Transport: &fhttp2.Transport{
